@@ -48,7 +48,7 @@ app.get('/todos',(req,res)=>{
 	})
 })
 
-app.delete('/delete/:id', (req,res)=>{
+app.delete('/todos/:id', (req,res)=>{
 	let id = req.params.id;
 	if(!ObjectID.isValid(id)){
 		return res.status(404).send();
