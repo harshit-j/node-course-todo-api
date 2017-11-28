@@ -47,16 +47,24 @@ UserSchema.methods.generateAuthToken = function(){
 		return token
 	});
 }
+
+UserSchema.statics.findByToken = function(token){
+	let User = this;
+	let decoded;
+
+	try{
+		decoded = jwt.verify(token,'abc123')
+	}catch(e){
+		return Promise.reject()
+	}
+
+	return User.findOne({
+		'_id':decoded._id,
+		"tokens.token":token, //To query a nested document in collection, use dot notation
+		"tokens.access":'auth'
+	});
+
+}
 let User = mongoose.model("User", UserSchema);
-
-// let newUser = new User({
-// 	email:"   a@   "
-// });
-
-// newUser.save().then((doc)=>{
-// 	console.log(`saved User: ${doc}`)
-// },(e)=>{
-// 	console.log(e)
-// })
 
 module.exports = { User }
