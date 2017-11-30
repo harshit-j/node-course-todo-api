@@ -34,8 +34,19 @@ let UserSchema = new mongoose.Schema({
 UserSchema.methods.toJSON = function() {
     let user = this;
     let userObject = user.toObject();
-    return _.pick(userObject, ['_id', 'email'])
+    return _.pick(userObject, ['_id', 'email']);
 }
+
+UserSchema.methods.removeToken = function(token){
+	let user = this;
+	
+	return user.update({
+		$pull : {
+			tokens : {token}
+		}
+	})
+}
+
 UserSchema.methods.generateAuthToken = function() {
     let user = this;
     let access = 'auth';
