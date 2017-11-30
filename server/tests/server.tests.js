@@ -210,7 +210,7 @@ describe('POST /users', ()=>{
 					expect(user).toExist();
 					expect(user.password).toNotBe(password);
 					done()
-				})
+				}).catch(e => done(e))
 			})
 	});
 
@@ -256,8 +256,8 @@ describe('POST /users/login', () => {
 
 	it('should reject invalid login',done => {
 		request(app)
-			.post('/users/login')
-			.send({
+			.post('/users/login'
+)			.send({
 				email:users[1].email,
 				password:'njlkkjnn'
 			})
@@ -272,5 +272,21 @@ describe('POST /users/login', () => {
 					done();
 				}).catch(e => done(e))
 			})
+	})
+});
+
+describe('DELETE /users/me/token', () => {
+	it('should remove auth token on logout', () => {
+		 request(app)
+		 	.delete('/users/me/token')
+		 	.set('x-auth',users[0].tokens[0].token)
+		 	.expect(200)
+		 	.end((err) => {
+		 		if(err) return done(err)
+
+		 		User.findById(users[0]._id).then(user => {
+		 			expect(user.tokens.length).toBe(0)
+		 		}).catch(e => done(e))
+		 	})
 	})
 })
