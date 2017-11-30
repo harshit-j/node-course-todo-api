@@ -37,7 +37,7 @@ describe('POST /todos',() => {
 		request(app)
 		.post('/todos')
 		.send({})
-		.expect(404)
+		.expect(400)
 		.end((err,res) =>{
 			if(err){
 				return done(err)
